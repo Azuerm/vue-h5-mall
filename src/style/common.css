@@ -3,6 +3,9 @@
   padding: 0;
   box-sizing: border-box;
 }
+/* html {
+  touch-action: manipulation;
+} */
 .text-ellipsis-2 {
   overflow: hidden;
   line-clamp: 2;
