@@ -6,7 +6,11 @@ import router from './router'
 import store from './store'
 // vant组件库
 import '@/utils/vant-ui'
+// 公共样式
 import '@/style/common.css'
+// 导入toast轻提示
+// import { Toast } from 'vant'
+// Toast('嘿嘿，你好呀')
 Vue.config.productionTip = false
 
 new Vue({
