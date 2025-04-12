@@ -25,7 +25,7 @@ instance.interceptors.response.use(function (response) {
   if (res.status !== 200) {
     // 给提示 
     Toast(res.message)
-    // 抛出一个错误的promise
+    // 抛出一个错误的promise 返回异步通知
     return Promise.reject(res.message)
   }
   return res

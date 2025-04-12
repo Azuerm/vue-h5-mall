@@ -1,4 +1,4 @@
-import { getInfo, setInfo} from '@/utils/storage'
+import { getInfo, setInfo } from '@/utils/storage'
 export default {
   namespaced: true,
   state () {
