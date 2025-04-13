@@ -12,6 +12,9 @@ import '@/style/common.css'
 // import { Toast } from 'vant'
 Vue.config.productionTip = false
 
+// 全局配置
+// todo
+
 new Vue({
   router,
   store,
