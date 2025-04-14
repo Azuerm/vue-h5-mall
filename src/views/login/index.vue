@@ -107,6 +107,8 @@ export default {
         this.$toast('请输入正确的手机验证码')
         return
       }
+      console.log('发送登录请求')
+      
       const res = await codeLogin(this.mobile, this.msgCode)
       this.$store.commit('user/setUserInfo',res.data)
       console.log(res)
