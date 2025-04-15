@@ -2,8 +2,11 @@
 import Vue from 'vue'
 import { Button, Switch, Rate } from 'vant'
 import { Tabbar, TabbarItem } from 'vant'
-import { NavBar, Toast, Swipe, Grid, GridItem,  Search, SwipeItem, Icon } from 'vant'
-
+import { NavBar, Toast, Swipe, Grid, GridItem,  Search, SwipeItem, Icon, ActionSheet, CountDown, Dialog, Checkbox } from 'vant'
+Vue.use(Checkbox)
+Vue.use(Dialog);
+Vue.use(CountDown);
+Vue.use(ActionSheet);
 Vue.use(Icon);
 Vue.use(GridItem);
 Vue.use(SwipeItem);
