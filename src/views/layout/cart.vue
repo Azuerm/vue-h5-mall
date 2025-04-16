@@ -2,19 +2,19 @@
   <div class="cart">
     <van-nav-bar title="购物车" fixed />
 
-    <div>
+    <div v-if="isLogin && cartList.length > 0 ">
       <!-- 购物车开头 -->
       <div class="cart-title">
         <span class="all">共<i>{{ cartTotal }}</i>件商品</span>
         <span class="edit">
-          <van-icon name="edit" />
+          <van-icon name="edit" @click="isEdit = !isEdit"/>
           编辑
         </span>
       </div>
       <!-- 购物车列表 -->
       <div class="cart-list">
         <div class="cart-item" v-for="item in cartList" :key="item.goods_id">
-          <van-checkbox :value="item.isChecked"></van-checkbox>
+          <van-checkbox @click="toggleCheck(item.goods_id)" :value="item.isChecked"></van-checkbox>
           <!-- 不能写v-model="item.isChecked"这样写直接跟后台数据双向绑定了，这里只能渲染 -->
           <div class="show">
             <img :src="item.goods.goods_image" alt="">
@@ -23,15 +23,16 @@
             <span class="tit text-ellipsis-2">{{ item.goods.goods_name }}</span>
             <span class="bottom">
               <div class="price">¥ <span>{{ item.goods.goods_price_min }}</span></div>
-              <CountBox :value="item.goods_num" ></CountBox>
+              <!-- 即希望保留原本的形参，又需要通过调用函数传参 => 箭头函数包装一层-->
+              <CountBox @input="(value) => changeCount(value, item.goods_id, item.goods_sku_id)" :value="item.goods_num" ></CountBox>
             </span>
           </div>
         </div>
       </div>
 
       <div class="footer-fixed">
-        <div class="all-check">
-          <van-checkbox icon-size="18"></van-checkbox>
+        <div @click="toggleAllCheck" class="all-check">
+          <van-checkbox :value="isAllChecked" icon-size="18"></van-checkbox>
           全选
         </div>
 
@@ -40,32 +41,99 @@
             <span>合计：</span>
             <span>¥ <i class="totalPrice">{{ selPrice }}</i></span>
           </div>
-          <div v-if="true" class="goPay" :class="{ disabled: selCount === 0}">结算({{ selCount }})</div>
-          <div v-else class="delete" :class="{ disabled: selCount === 0}">删除</div>
+          <div v-if="!isEdit" class="goPay" :class="{ disabled: selCount === 0}" @click="goPay">结算({{ selCount }})</div>
+          <div @click="handleDel" v-else class="delete" :class="{ disabled: selCount === 0}">删除</div>
         </div>
       </div>
+    </div>
+    
+    <div class="empty-cart" v-else>
+      <img src="@/assets/empty.png" alt="">
+      <div class="tips">
+        您的购物车是空的, 快去逛逛吧
+      </div>
+      <div class="btn" @click="$router.push('/')">去逛逛</div>
     </div>
   </div>
 </template>
 
 <script>
+import { changeCount } from '@/api/cart'
 import CountBox from '@/components/CountBox.vue'
 import { mapState, mapGetters } from 'vuex'
+
 export default {
   name: 'CartPage',
   components: {
     CountBox
   },
+  data () {
+    return {
+      isEdit: false //编辑状态
+    }
+  },
   computed: {
     ...mapState('cart',['cartList']),
-    ...mapGetters('cart',['cartTotal','selCarList','selCount','selPrice'])
+    ...mapGetters('cart',['cartTotal','selCarList','selCount','selPrice','isAllChecked']),
+    isLogin () {
+      return this.$store.getters.token
+    }
   },
   created () {
     // 必须是登录过的用户，才有用户购物车列表
-    if (this.$store.getters.token) {
+    if (this.isLogin) {
       this.$store.dispatch('cart/getCartAction')
     }
-  }
+  },
+  methods: {
+    toggleCheck (goodsId) {
+      this.$store.commit('cart/toggleCheck', goodsId)
+    },
+    toggleAllCheck () {
+      this.$store.commit('cart/toggleAllCheck', !this.isAllChecked)
+      // 对原来状态取反
+    },
+    changeCount (goodsNum,goodsId,goodSkuId) {
+      // console.log(goodsNum,goodsId,goodSkuId)
+      // 调用vuex的action，进行数量的修改
+      this.$store.dispatch('cart/changeCountAction', {
+        goodsNum,
+        goodsId,
+        goodSkuId
+      })
+    },
+    handleDel () {
+      // 被选中的总数为0
+      if (this.selCount === 0 ) return
+      this.$store.dispatch('cart/delSelect')
+      this.isEdit = false
+    },
+    goPay () {
+      // 判断有没有选中的商品
+      if (this.selCount > 0) {
+        // 有选中的商品才进行阶段跳转
+        this.$router.push({
+          path: '/pay',
+          query: {
+            mode: 'cart',
+            cartIds: this.selCarList.map(item => item.id).join(',')
+          }
+        })
+      }
+    }
+  },
+  watch: {
+      isEdit (value) {
+        // 监视一下编辑状态的值
+        if (value) {
+          // 处于编辑状态都不选中
+          this.$store.commit('cart/toggleAllCheck',false)
+        } else {
+          // 处于结算状态都选中
+          this.$store.commit('cart/toggleAllCheck',true)
+        }
+      }
+    }
 }
 </script>
 
