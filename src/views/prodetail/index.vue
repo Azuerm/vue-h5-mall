@@ -114,8 +114,11 @@ import defaultImg from '@/assets/default-avatar.png'
 // 导入组件
 import CountBox from '@/components/CountBox.vue'
 import { addCart } from '@/api/cart'
+// 导入mixins
+import loginConfirm from '@/mixins/loginConfirm'
 export default {
-  name: 'ProDetail', 
+  name: 'ProDetail',
+  mixins: [loginConfirm],
   components: {
     CountBox
   },
@@ -143,6 +146,7 @@ export default {
     this.getDetail(),
     this.getComments()
     // 获取详情和评价
+    this.sayHi()
   },
   methods: {
     onChange(index) {
@@ -167,6 +171,10 @@ export default {
       this.showPannel = true
     },
     async addCart () {
+      if (this.loginConfirm()) {
+        return
+        // 弹框弹了就不用执行下面的了
+      }
       const { data } = await addCart(this.goodsId, this.addCount, this.detail.skuList[0].goods_sku_id)
       this.cartTotal = data.cartTotal
       this.$toast('加入购物车成功')
@@ -175,29 +183,7 @@ export default {
       
     },
     goBuyNow () {
-      // 判断token是否存在
-      // 1.如果token不存在，弹确认框
-      // 2.如果token存在，继续请求操作
-      if (!this.$store.getters.token) {
-        // console.log('弹确认框')
-        this.$dialog.confirm({ 
-          title:'温馨提示',
-          message:'此时需要先登录才能继续操作哦',
-          confirmButtonText: '去登录',
-          cancelButtonText: '再逛逛'
-        })
-          .then(() => {
-            // 如果希望，跳转到登录 => 登录后能回跳回来，需要在跳转去携带参数(当前的路径地址)
-            // this.$route.fullPath(会包含查询参数)
-            this.$router.replace({
-              // push会不断往历史记录累加， replace不会新增历史，替换原有的历史
-              path: '/login',
-              query: {
-                backUrl: this.$route.fullPath
-              }
-            })
-          })
-          .catch(() => {})
+      if (this.loginConfirm()) {
         return
       }
       this.$router.push({
