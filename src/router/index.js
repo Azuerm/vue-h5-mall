@@ -23,7 +23,7 @@ const SearchList = () => import('@/views/search/list')
 const ProDetail = () => import('@/views/prodetail')
 const Pay = () => import('@/views/pay')
 const Myorder = () => import('@/views/myorder')
-
+const Address = () => import('@/views/address')
 Vue.use(VueRouter)
 
 const router = new VueRouter({
@@ -44,7 +44,8 @@ const router = new VueRouter({
     // 动态路由传参，确认将来时那个商品，路由参数中携带id
     { path: '/prodetail/:id', component: ProDetail },
     { path: '/pay', component: Pay },
-    { path: '/myorder', component: Myorder }
+    { path: '/myorder', component: Myorder },
+    { path: '/address', component: Address}
   ]
 })
 

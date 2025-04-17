@@ -23,7 +23,7 @@
         请选择配送地址
       </div>
 
-      <div class="right-icon">
+      <div class="right-icon" @click="$router.push('/address')">
         <van-icon name="arrow" />
       </div>
     </div>

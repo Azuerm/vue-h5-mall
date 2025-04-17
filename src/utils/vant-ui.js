@@ -3,6 +3,8 @@ import Vue from 'vue'
 import { Button, Switch, Rate } from 'vant'
 import { Tabbar, TabbarItem } from 'vant'
 import { NavBar, Toast, Swipe, Grid, GridItem,  Search, SwipeItem, Icon, ActionSheet, CountDown, Dialog, Checkbox, Tabs, Tab } from 'vant'
+import { AddressEdit } from 'vant';
+Vue.use(AddressEdit)
 Vue.use(Tab)
 Vue.use(Tabs)
 Vue.use(Checkbox)

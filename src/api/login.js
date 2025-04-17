@@ -20,7 +20,9 @@ export const getMsgCode = (captchaCode, captchaKey, mobile ) => {
 // 3.登录接口
 export const codeLogin = (mobile, smsCode) => {
   return request.post('/passport/login',{
-    platform: 'H5',
+    Headers: {
+      platform: 'H5'
+    },
     form: {
       isParty: false,
       partyData: {},
