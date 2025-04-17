@@ -1,19 +1,29 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Login from '@/views/login'
+// 其他的按需加载
+// import Layout from '@/views/layout'
+// import Search from '@/views/search'
+// import SearchList from '@/views/search/list'
+// import ProDetail from '@/views/prodetail'
+// import Pay from '@/views/pay'
+// import Myorder from '@/views/myorder'
+
+// 首页相关 - 默认加载
 // import Login from '@/views/login/index.vue' 和上面的效果一样
-import Layout from '@/views/layout'
-import Search from '@/views/search'
-import SearchList from '@/views/search/list'
-import ProDetail from '@/views/prodetail'
-import Pay from '@/views/pay'
-import Myorder from '@/views/myorder'
+import Login from '@/views/login'
 import Home from '@/views/layout/home.vue'
 import Category from '@/views/layout/category.vue'
 import Cart from '@/views/layout/cart.vue'
 import User from '@/views/layout/user.vue'
 
 import store from '@/store'
+const Layout = () => import('@/views/layout')
+const Search = () => import('@/views/search')
+const SearchList = () => import('@/views/search/list')
+const ProDetail = () => import('@/views/prodetail')
+const Pay = () => import('@/views/pay')
+const Myorder = () => import('@/views/myorder')
+
 Vue.use(VueRouter)
 
 const router = new VueRouter({

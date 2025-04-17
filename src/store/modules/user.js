@@ -14,6 +14,14 @@ export default {
       setInfo(obj)
     }
   },
-  actions: {},
+  actions: {
+    logout (context) {
+      // 个人信息要重置
+      context.commit('setUserInfo', {})
+      // 购物车信息要重置 (跨模块调用 mutation：cart/setCartList)
+      context.commit('cart/setCartList', [], {root: false})
+
+    }
+  },
   getters: {}
 }

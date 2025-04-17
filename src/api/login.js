@@ -7,7 +7,9 @@ export const getPicCode = () => {
 // 2.获取短信验证码
 export const getMsgCode = (captchaCode, captchaKey, mobile ) => {
   return request.post('/captcha/sendSmsCaptcha',{
-    platform: 'H5',
+    Headers: {
+      platform: 'H5'
+    },
     form: {
       captchaCode,
       captchaKey,
